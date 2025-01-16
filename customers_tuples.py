@@ -39,18 +39,16 @@ def merge(left: list, right: list):
 class UserManager:
     def __init__(self):
         try:
-            self.customers = json.load(open("customers_list.json", 'r'))
+            self.customers = json.load(open("customers_tuple.json", 'r'))
         except Exception:
             self.customers = []
 
     def add_user(self, name, location, address, contact, interests):
-        print(interests)
         customer = User(name, location, address, contact, interests)
-        self.customers.append(
-            [customer.name, customer.location, customer.address, customer.contact, customer.interests])
+        self.customers.append((customer.name, customer.location, customer.address, customer.contact, customer.interests))
         self.customers = self.merge_sort(self.customers)
-        print(self.customers)
-        file = open('customers_list.json', 'w')
+        # print('customers', self.customers)
+        file = open('customers_tuple.json', 'w')
         json.dump(self.customers, file)
 
     def merge_sort(self, items):
@@ -71,7 +69,7 @@ class UserManager:
         results = []
 
         for customer in self.customers:
-            if key.lower() in customer[index]:
+            if key.lower() in customer[index].lower():
                 results.append(customer)
 
         return results
@@ -112,7 +110,6 @@ class App:
 
         self.main_frame.pack(fill="both", expand=True)
 
-        print(('box' in 'Box, Football'.lower()))
 
     def create_main_frame(self):
         # Main frame widgets
@@ -286,7 +283,6 @@ class App:
     def search_customers(self):
         key = self.search_entry.get()
         attribute = self.search_option.get()
-        print(f'key:{key}  attr:{attribute}')
 
         if not key:
             messagebox.showerror("Error", "Please enter a search query!")
@@ -294,9 +290,6 @@ class App:
 
         results = self.manager.search(key, attribute)
         self.search_results.delete(0, tk.END)
-        print("Anime, Taekwondo".lower())
-
-        print('Box', 'box' in ['box', 'animes'])
 
         if results:
             for user in results:

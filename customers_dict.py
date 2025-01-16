@@ -11,7 +11,7 @@ class User:
         self.location = location
         self.address = address
         self.contact = contact
-        self.interests = interests.split(', ')
+        self.interests = interests
 
     def __repr__(self):
         return f"Name: {self.name}, Location: {self.location}, Address: {self.address}, Contact: {self.contact}, Interests: {self.interests}"
@@ -64,35 +64,12 @@ class UserManager:
 
             return self.merge(left, right)
 
-    # def bubble_sort(self):
-    #     n = len(self.customers)
-    #     for i in range(n):
-    #         for j in range(0, n - i - 1):
-    #             if self.customers[j].name > self.customers[j + 1].name:
-    #                 self.customers[j], self.customers[j + 1] = self.customers[j + 1], self.customers[j]
-
-    def binary_search(self, key, attribute):
-        low, high = 0, len(self.customers) - 1
+    def search(self, key: str, attr):
         results = []
 
-        while low <= high:
-            mid = (low + high) // 2
-            value = self.customers[mid][attribute]
-
-            if key.lower() in value.lower():
-                results.append(self.customers[mid])
-                left, right = mid - 1, mid + 1
-                while left >= 0 and key.lower() in self.customers[left][attribute].lower():
-                    results.append(self.customers[left])
-                    left -= 1
-                while right < len(self.customers) and key.lower() in self.customers[right][attribute].lower():
-                    results.append(self.customers[right])
-                    right += 1
-                break
-            elif value.lower() < key.lower():
-                low = mid + 1
-            else:
-                high = mid - 1
+        for customer in self.customers:
+            if key.lower() in customer[attr].lower():
+                results.append(customer)
 
         return results
 
@@ -312,7 +289,7 @@ class App:
             messagebox.showerror("Error", "Please enter a search query!")
             return
 
-        results = self.manager.binary_search(key, attribute)
+        results = self.manager.search(key, attribute)
         self.search_results.delete(0, tk.END)
 
         if results:
